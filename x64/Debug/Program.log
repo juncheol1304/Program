@@ -1,4 +1,4 @@
-﻿  Brush.cpp
-  Program.cpp
+﻿  Program.cpp
+  Vector2.cpp
+C:\Users\user\Desktop\Program\Program\Program.cpp(32,2): error C2045: 'Vector2': 레이블이 재정의되었습니다.
   코드를 생성하고 있습니다...
-  Program.vcxproj -> C:\Users\user\Desktop\Program\x64\Debug\Program.exe
