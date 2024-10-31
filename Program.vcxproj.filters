@@ -17,5 +17,19 @@
     <ClCompile Include="Program.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Zerg.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Zergling.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Hydralisk.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Zerg.h" />
+    <ClInclude Include="Zergling.h" />
+    <ClInclude Include="Hydralisk.h" />
   </ItemGroup>
 </Project>
