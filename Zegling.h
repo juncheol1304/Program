@@ -1,10 +1,12 @@
 #pragma once
 #include "Zerg.h"
-class Hydralisk : public Zerg
+class Zegling : public Zerg
 {
 public:
-	Hydralisk();
+	Zegling();
 
 	void Recovery() override;
+
+
 };
 

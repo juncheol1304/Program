@@ -1,6 +1,10 @@
 ﻿#include <iostream>
 #include <string.h>
 
+#include "Hydralisk.h"
+#include "Zegling.h"
+
+
 using namespace std;
 
 template<typename T>
@@ -66,6 +70,11 @@ public:
 	 return first == second;
  }
  
+ void Beacon(Zerg & zerg)
+ {
+	 zerg.Recovery();
+ }
+
  int main()
  {
 #pragma region 템플릿
@@ -105,8 +114,22 @@ public:
 	 // 하위 클래스의 정보를 담을 수 있는 객체에 상위 클래스의
 	 // 자료형을 부여하여, 상위 클래스처럼 사용할 수 있는 기능입니다.
 
-#pragma endregion
+	 Zegling zegling;
+	 Hydralisk hydralisk;
 
+	 zegling.OnDamage(10);
+	 hydralisk.OnDamage(15);
+
+	 cout << zegling.Health() << endl;
+	 cout << hydralisk.Health()<< endl;
+
+	 Beacon(zegling);
+	 Beacon(hydralisk);
+
+	 cout << zegling.Health() << endl;
+	 cout << hydralisk.Health() << endl;
+
+#pragma endregion
 
 	return 0;
 }
