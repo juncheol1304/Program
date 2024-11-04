@@ -1,135 +1,107 @@
 ﻿#include <iostream>
-#include <string.h>
-
-#include "Hydralisk.h"
-#include "Zegling.h"
-
-
+#include <thread>
 using namespace std;
 
-template<typename T>
-class List
+class Packet
 {
 private:
-	int size;
-	
-	int index;
-
-	T* pointer;
+	int data;
 
 public:
-	List(int size)
+	Packet()
 	{
-		index = 0;
+		data = 100;
 
-		this->size = size;
-
-		pointer = new T[size];
+		cout << "Create Packet" << endl;
 	}
 
-	void Add(T data)
+	int Data()
 	{
-		if (index >= size)
-		{
-			cout << "List is Full" << endl;
-		}
-		else
-		{
-			pointer[index++] = data;
-		}
-
+		return data;
 	}
 
-	T & operator [] (int index)
+	~Packet()
 	{
-		return pointer[index];
-
-
-	}
-
-	~List()
-	{
-		delete pointer;
+		cout << "Release Packet" << endl;
 	}
 };
 
- template<typename T>
- bool Same(T x, T y)
- {
- 	return x == y;
- }
+class Character
+{
+private:
+	weak_ptr<Character> sharedPointer;
 
- template<>
- bool Same<const char*>(const char* x, const char* y)
- {
-	 cout << "템플릿 특수화" << endl;
+public:
+	Character()
+	{
+		cout << "Create Character" << endl;
+	}
 
-	 int first = strlen(x);
-	 int second = strlen(y);
+	void Parther(weak_ptr<Character> clone)
+	{
+		sharedPointer = clone;
+	}
 
-	 return first == second;
- }
- 
- void Beacon(Zerg & zerg)
- {
-	 zerg.Recovery();
- }
+	~Character()
+	{
+		cout << "Release Character" << endl;
+	}
+};
 
- int main()
- {
-#pragma region 템플릿
-	// 데이터 형식에 의존하지 않고, 하나의 값이 여러 다른 데이터
-	// 타입들을 가질 수 있는 기술에 중점을 두어 재사용을 높일 수
-	// 있는 기능입니다.
+int main()
+{
+#pragma region 스마트 포인터
+	// 포인터를 시뮬레이트하는 동시에 자동으로 메모리 관리를 해주며,
+	// 경계 확인과 같은 추가 기능 제공하는 추상 데이터 포인터 형식입니다.
 
-	 // List<int> list(5);
+#pragma region Unique 포인터
+	// 특정한 객체를 하나의 스마트 포인터만 가리킬 수
+	// 있도록 되어 있는 포인터입니다.
+
+	// unique_ptr<Packet> uniquePointer1 = make_unique<Packet>(); // (new int); 이것도 가능
 	 
-	 // list.Add(10);
-	 // list.Add(20);
-	 // list.Add(30);
-	 // list.Add(40);
-	 // list.Add(50);
-	  
-	 // for (int i = 0; i < 5; i++)
-	 // {
-	 // cout << list[i] << endl;
-	 // };
-
-#pragma endregion
-
-#pragma region 템플릿 특수화
-	 // 특정 자료형에 대해 다르게 처리하고 싶은 경우
-	 // 특정한 자료형만 다른 형식으로 동작시키는 템플릿 기능입니다.
-
-	 // cout << Same('A','B') << endl;
-	 // cout << Same(10, 10) << endl;
-	 // cout << Same(10.5, 10.7) << endl;
-	  
-	 // cout << Same("Apple", "Korea") << endl;
+	// cout << "uniquePointer1의 Data 값 : " << uniquePointer1->Data() << endl;
+	 
+	// unique_ptr<Packet> uniquePointer2 = move(uniquePointer1); // std::move 소유권을 넘겨주는 함수\
+	// 소유권을 넘겨주면 null이 됨
+	 
+	// cout << "uniquePointer1의 Data 값 : " << uniquePointer1->Data() << endl;
+	// cout << "uniquePointer2의 Data 값 : " << uniquePointer2->Data() << endl;
 
 
 #pragma endregion
 
-#pragma region 업 캐스팅
-	 // 하위 클래스의 정보를 담을 수 있는 객체에 상위 클래스의
-	 // 자료형을 부여하여, 상위 클래스처럼 사용할 수 있는 기능입니다.
+#pragma region Shared 포인터
+	// 하나의 자원 객체를 여러 포인터 객체가 가리킬 수 있으며,
+	// 모든 포인터 객체가 자원 객체를 필요하지 않을 때 자원 객체를
+	// 해제하도록 설계되어 있는 포인터입니다.
 
-	 Zegling zegling;
-	 Hydralisk hydralisk;
-
-	 zegling.OnDamage(10);
-	 hydralisk.OnDamage(15);
-
-	 cout << zegling.Health() << endl;
-	 cout << hydralisk.Health()<< endl;
-
-	 Beacon(zegling);
-	 Beacon(hydralisk);
-
-	 cout << zegling.Health() << endl;
-	 cout << hydralisk.Health() << endl;
+	// shared_ptr<Character> sharedPointer1 = make_shared<Character>();
+	// 
+	// cout << "sharedPointer1의 참조 횟수 : " << sharedPointer1.use_count() << endl;
+	// 
+	// shared_ptr<Character> sharedPointer2 = sharedPointer1;
+	// 
+	// cout << "sharedPointer1의 참조 횟수 : " << sharedPointer1.use_count() << endl;
+	// cout << "sharedPointer2의 참조 횟수 : " << sharedPointer2.use_count() << endl;
 
 #pragma endregion
+
+#pragma region Weak 포인터
+	// 자원 객체를 소유하지 않기 때문에 Shared 포인터로 관리되는 
+	// 자원 객체를 가리켜서 참조 개수에 영향을 미치지 않게 하는 포인터입니다.
+
+	shared_ptr<Character> warrior = make_shared<Character>();
+	shared_ptr<Character> wizard = make_shared<Character>();
+
+	warrior->Parther(wizard);
+	wizard->Parther(warrior);
+
+#pragma endregion
+
+
+#pragma endregion
+
 
 	return 0;
 }
